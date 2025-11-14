@@ -124,7 +124,7 @@ export default function Home() {
   ];
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-white to-gray-200 text-black dark:bg-gradient-to-b dark:from-black dark:via-gray-900 dark:to-gray-950 dark:text-white px-6 py-20 relative overflow-visible">
+    <main className="min-h-screen bg-black text-white px-6 py-20 relative overflow-visible">
       <div
         id="cursor-glow"
         className="pointer-events-none fixed w-56 h-56 hidden dark:block bg-green-400/25 rounded-full blur-3xl transform -translate-x-1/2 -translate-y-1/2 z-0"
