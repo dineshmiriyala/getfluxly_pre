@@ -2,6 +2,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import Tracker from "@/app/components/Tracker.js";
+import SeoSchema from "./seo-schema";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,6 +32,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className="font-sans">
+      <head>
+        <SeoSchema />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-ZH198LDZGQ"

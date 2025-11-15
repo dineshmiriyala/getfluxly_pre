@@ -85,6 +85,10 @@ export default function Home() {
       title: "Deep Deliverability Analytics",
       desc: "Accurate open rates, click tracking, intelligent Apple MPP avoidance, reader time tracking, device/browser insights, and full webhook ingestion.",
       icon: "/deep-analytics.png",
+      cta: {
+        label: "Learn more about analytics",
+        href: "/analytics",
+      },
     },
     {
       title: "Spam Placement Testing",
@@ -124,10 +128,10 @@ export default function Home() {
   ];
 
   return (
-    <main className="min-h-screen bg-black text-white px-6 py-20 relative overflow-visible">
+    <main className="min-h-screen text-gray-900 dark:text-white px-6 py-20 relative overflow-visible bg-white bg-[radial-gradient(circle_at_top,_#ffffff,_#e9ffe9)] dark:bg-black dark:bg-none">
       <div
         id="cursor-glow"
-        className="pointer-events-none fixed w-56 h-56 hidden dark:block bg-green-400/25 rounded-full blur-3xl transform -translate-x-1/2 -translate-y-1/2 z-0"
+        className="pointer-events-none fixed w-56 h-56 bg-[radial-gradient(circle,_rgba(253,230,138,0.9),_rgba(251,191,36,0.35),_transparent)] dark:bg-[radial-gradient(circle,_rgba(74,222,128,0.45),_rgba(16,185,129,0.1),_transparent)] rounded-full blur-3xl transform -translate-x-1/2 -translate-y-1/2 z-0 opacity-90 dark:opacity-100 mix-blend-multiply dark:mix-blend-screen"
       ></div>
 
       <section className="min-h-screen flex flex-col justify-between items-center text-center pt-28 pb-16 gap-8 relative">
@@ -252,6 +256,24 @@ export default function Home() {
                 <p className="text-gray-700 dark:text-gray-300 leading-relaxed flex-1">
                   {f.desc}
                 </p>
+                {f.cta && (
+                  <a
+                    href={f.cta.href}
+                    className="mt-4 inline-flex items-center gap-2 text-green-600 dark:text-green-400 text-sm font-semibold"
+                  >
+                    {f.cta.label}
+                    <svg
+                      viewBox="0 0 24 24"
+                      className="w-3 h-3"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path d="M6 6h12v12" />
+                      <path d="M6 18 18 6" />
+                    </svg>
+                  </a>
+                )}
               </div>
             ))}
           </div>
