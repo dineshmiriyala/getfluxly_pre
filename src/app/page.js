@@ -85,6 +85,10 @@ export default function Home() {
       title: "Deep Deliverability Analytics",
       desc: "Accurate open rates, click tracking, intelligent Apple MPP avoidance, reader time tracking, device/browser insights, and full webhook ingestion.",
       icon: "/deep-analytics.png",
+      cta: {
+        label: "Learn more about analytics",
+        href: "/analytics",
+      },
     },
     {
       title: "Spam Placement Testing",
@@ -252,6 +256,24 @@ export default function Home() {
                 <p className="text-gray-700 dark:text-gray-300 leading-relaxed flex-1">
                   {f.desc}
                 </p>
+                {f.cta && (
+                  <a
+                    href={f.cta.href}
+                    className="mt-4 inline-flex items-center gap-2 text-green-600 dark:text-green-400 text-sm font-semibold"
+                  >
+                    {f.cta.label}
+                    <svg
+                      viewBox="0 0 24 24"
+                      className="w-3 h-3"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path d="M6 6h12v12" />
+                      <path d="M6 18 18 6" />
+                    </svg>
+                  </a>
+                )}
               </div>
             ))}
           </div>
