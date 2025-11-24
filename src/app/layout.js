@@ -16,16 +16,28 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "GetFluxly - Email Analytics for Marketing campaigns",
+  title: "GetFluxly - Customer Lifecycle Platform for Modern SaaS",
   description:
-    "GetFluxly provides deep deliverability analytics, sending diagnostics, IP reputation insights, and powerful automation workflows for large/bulk marketers and builders, transactional emails.",
+    "Dev-friendly, all-in-one customer lifecycle platform: track user behaviour, build segments, send automated messages, and monitor deliverability without vendor lock.",
+  keywords: [
+    "customer lifecycle platform",
+    "product analytics",
+    "user behavior tracking",
+    "segmentation",
+    "lifecycle messaging",
+    "deliverability monitoring",
+    "dev friendly",
+    "SaaS growth",
+    "automation",
+    "email infrastructure",
+  ],
   openGraph: {
-    title: "GetFluxly — Email Analytics Platform",
+    title: "GetFluxly — Customer Lifecycle Platform",
     description:
-      "Deep deliverability insights, MX checks, and automation marketing emails.",
+      "Analytics, segmentation, messaging, and deliverability in one unified, dev-friendly platform for modern SaaS teams.",
     url: "https://getfluxly.com",
     siteName: "GetFluxly",
-    type: "website",
+    type: "article",
   },
 };
 
