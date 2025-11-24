@@ -16,13 +16,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "GetFluxly - Email Analytics for Marketing campaigns",
+  title: "GetFluxly - Customer Lifecycle Platform for Modern SaaS",
   description:
-    "GetFluxly provides deep deliverability analytics, sending diagnostics, IP reputation insights, and powerful automation workflows for large/bulk marketers and builders, transactional emails.",
+    "Track user behaviour, build segments, send automated messages, and monitor deliverability — all in one simple, affordable tool. No bloated dashboards, no complex setups, no expensive ESP lock in.",
   openGraph: {
-    title: "GetFluxly — Email Analytics Platform",
+    title: "GetFluxly — Customer Lifecycle Platform",
     description:
-      "Deep deliverability insights, MX checks, and automation marketing emails.",
+      "Analytics, segmentation, messaging, and deliverability in one unified platform built for modern SaaS teams.",
     url: "https://getfluxly.com",
     siteName: "GetFluxly",
     type: "website",

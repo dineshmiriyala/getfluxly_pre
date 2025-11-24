@@ -5,9 +5,4 @@
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
-  <url>
-    <loc>https://getfluxly.com/analytics</loc>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
-  </url>
 </urlset>
