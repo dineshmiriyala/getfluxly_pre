@@ -18,14 +18,26 @@ const geistMono = Geist_Mono({
 export const metadata = {
   title: "GetFluxly - Customer Lifecycle Platform for Modern SaaS",
   description:
-    "Track user behaviour, build segments, send automated messages, and monitor deliverability — all in one simple, affordable tool. No bloated dashboards, no complex setups, no expensive ESP lock in.",
+    "Dev-friendly, all-in-one customer lifecycle platform: track user behaviour, build segments, send automated messages, and monitor deliverability without vendor lock.",
+  keywords: [
+    "customer lifecycle platform",
+    "product analytics",
+    "user behavior tracking",
+    "segmentation",
+    "lifecycle messaging",
+    "deliverability monitoring",
+    "dev friendly",
+    "SaaS growth",
+    "automation",
+    "email infrastructure",
+  ],
   openGraph: {
     title: "GetFluxly — Customer Lifecycle Platform",
     description:
-      "Analytics, segmentation, messaging, and deliverability in one unified platform built for modern SaaS teams.",
+      "Analytics, segmentation, messaging, and deliverability in one unified, dev-friendly platform for modern SaaS teams.",
     url: "https://getfluxly.com",
     siteName: "GetFluxly",
-    type: "website",
+    type: "article",
   },
 };
 

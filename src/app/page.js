@@ -268,6 +268,9 @@ export default function Home() {
           <p className="text-lg text-gray-300 mb-3">
             Track user behaviour, build segments, send automated messages, and monitor deliverability — all in one simple, affordable tool.
           </p>
+          <p className="text-sm text-gray-300 mb-4">
+            Dev-friendly and welcoming to every team: plug in your own infra, webhooks, and APIs without vendor lock.
+          </p>
           <p className="text-sm text-gray-400 mb-8">
             No bloated dashboards, no complex setups, no expensive ESP lock in. Analytics, segmentation, messaging, deliverability — in one unified platform.
           </p>
@@ -338,7 +341,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mt-24" ref={featuresRef}>
+      <article className="mt-24" ref={featuresRef}>
         <div className="max-w-6xl mx-auto animate-floatUp relative z-20">
           <h2 className="text-4xl sm:text-5xl font-extrabold mb-6 text-center bg-gradient-to-r from-[#FCA311] via-[#ffd166] to-white text-transparent bg-clip-text drop-shadow-[0_10px_40px_rgba(252,163,17,0.35)] leading-tight">
             See the lifecycle as one graph
@@ -393,7 +396,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>
+      </article>
 
       <section className="mt-20 max-w-xl mx-auto text-center">
         <h3 className="text-3xl font-bold mb-4 bg-gradient-to-r from-[#FCA311] via-[#ffd166] to-white text-transparent bg-clip-text drop-shadow-[0_10px_30px_rgba(252,163,17,0.3)]">
