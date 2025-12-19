@@ -16,25 +16,29 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "GetFluxly - Customer Lifecycle Platform for Modern SaaS",
+  title: "GetFluxly - Analytics + Lifecycle Email on Your Own SMTP",
   description:
-    "Dev-friendly, all-in-one customer lifecycle platform: track user behaviour, build segments, send automated messages, and monitor deliverability without vendor lock.",
+    "Paste a few lines of code to track web analytics, build unified profiles, and send lifecycle email through SES, Mailgun, SMTP2GO, or your own SMTP — no vendor lock.",
   keywords: [
-    "customer lifecycle platform",
-    "product analytics",
-    "user behavior tracking",
-    "segmentation",
-    "lifecycle messaging",
-    "deliverability monitoring",
-    "dev friendly",
+    "analytics",
+    "web analytics",
+    "JS SDK",
+    "HTTP API",
+    "customer profiles",
+    "lifecycle email",
+    "SMTP",
+    "SES",
+    "Mailgun",
+    "SMTP2GO",
+    "developer friendly",
     "SaaS growth",
     "automation",
     "email infrastructure",
   ],
   openGraph: {
-    title: "GetFluxly — Customer Lifecycle Platform",
+    title: "GetFluxly — Analytics + Messaging on Your Infra",
     description:
-      "Analytics, segmentation, messaging, and deliverability in one unified, dev-friendly platform for modern SaaS teams.",
+      "JS SDK + HTTP tracking, unified customer profiles, and lifecycle email that runs on SES, Mailgun, SMTP2GO, or any SMTP you already use.",
     url: "https://getfluxly.com",
     siteName: "GetFluxly",
     type: "article",
