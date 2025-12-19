@@ -1,14 +1,21 @@
 "use client";
 
 import { useEffect } from "react";
-import { v4 as uuidv4 } from "uuid";
+
+const createSessionId = () => {
+  if (typeof crypto !== "undefined" && crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+
+  return `sess_${Math.random().toString(36).slice(2)}${Date.now().toString(36)}`;
+};
 
 export default function Tracker() {
   useEffect(() => {
     // Persistent session ID for the user
     let session_id = localStorage.getItem("fluxly_session");
     if (!session_id) {
-      session_id = uuidv4();
+      session_id = createSessionId();
       localStorage.setItem("fluxly_session", session_id);
     }
 
@@ -34,7 +41,13 @@ export default function Tracker() {
       });
     };
 
-    track();
+    const schedule = window.requestIdleCallback
+      ? (cb) => window.requestIdleCallback(cb, { timeout: 2000 })
+      : (cb) => window.setTimeout(cb, 1200);
+
+    schedule(() => {
+      track();
+    });
   }, []);
 
   return null;

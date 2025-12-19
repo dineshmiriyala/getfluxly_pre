@@ -1,5 +1,6 @@
-"use client";
-import { useState, useRef } from "react";
+import CodeBlock from "@/app/components/CodeBlock";
+import HomeCodeTabs from "@/app/components/HomeCodeTabs";
+import HomeWaitlistForm from "@/app/components/HomeWaitlistForm";
 
 const codeSamples = {
   template: [
@@ -81,12 +82,6 @@ const codeSamples = {
   ].join("\n"),
 };
 
-const CodeBlock = ({ language, code }) => (
-  <pre className={`code-block code-block--${language}`} data-lang={language}>
-    <code dangerouslySetInnerHTML={{ __html: code }} />
-  </pre>
-);
-
 const ArchitectureDiagram = () => (
   <div className="diagram">
     <svg viewBox="0 0 900 320" className="w-full" role="img" aria-label="Fluxly architecture diagram">
@@ -103,7 +98,7 @@ const ArchitectureDiagram = () => (
       <text x="120" y="110" fill="#e8ecf2" fontSize="16" fontWeight="600" textAnchor="middle">
         Your App
       </text>
-      <text x="120" y="132" fill="#9da8ba" fontSize="12" textAnchor="middle">
+      <text x="120" y="132" fill="#b1bdcf" fontSize="12" textAnchor="middle">
         web & backend
       </text>
 
@@ -111,7 +106,7 @@ const ArchitectureDiagram = () => (
       <text x="350" y="82" fill="#e8ecf2" fontSize="16" fontWeight="600" textAnchor="middle">
         JS SDK
       </text>
-      <text x="350" y="104" fill="#9da8ba" fontSize="12" textAnchor="middle">
+      <text x="350" y="104" fill="#b1bdcf" fontSize="12" textAnchor="middle">
         drop-in front-end
       </text>
 
@@ -119,38 +114,40 @@ const ArchitectureDiagram = () => (
       <text x="350" y="212" fill="#e8ecf2" fontSize="16" fontWeight="600" textAnchor="middle">
         HTTP POST
       </text>
-      <text x="350" y="234" fill="#9da8ba" fontSize="12" textAnchor="middle">
+      <text x="350" y="234" fill="#b1bdcf" fontSize="12" textAnchor="middle">
         server-to-server
       </text>
 
       <rect x="510" y="95" width="190" height="130" rx="18" fill="#0f1628" stroke="rgba(255,255,255,0.2)" />
       <text x="605" y="150" fill="#e8ecf2" fontSize="16" fontWeight="700" textAnchor="middle">
-        Events & Profiles
+        Customer Profile
       </text>
-      <text x="605" y="172" fill="#9da8ba" fontSize="12" textAnchor="middle">
+      <text x="605" y="172" fill="#b1bdcf" fontSize="12" textAnchor="middle">
         timelines, traits, segments
       </text>
 
-      <rect x="760" y="60" width="110" height="60" rx="12" fill="#0d1324" stroke="rgba(255,255,255,0.16)" />
-      <text x="815" y="95" fill="#e8ecf2" fontSize="13" fontWeight="700" textAnchor="middle">
-        SES
+      <rect x="510" y="255" width="190" height="56" rx="14" fill="#0d1324" stroke="rgba(255,255,255,0.16)" />
+      <rect x="528" y="282" width="6" height="12" rx="2" fill="rgba(252,163,17,0.85)" />
+      <rect x="540" y="278" width="6" height="16" rx="2" fill="rgba(252,163,17,0.85)" />
+      <rect x="552" y="274" width="6" height="20" rx="2" fill="rgba(252,163,17,0.85)" />
+      <text x="575" y="286" fill="#e8ecf2" fontSize="15" fontWeight="700" textAnchor="start">
+        Analytics
       </text>
-      <rect x="760" y="135" width="110" height="60" rx="12" fill="#0d1324" stroke="rgba(255,255,255,0.16)" />
-      <text x="815" y="170" fill="#e8ecf2" fontSize="13" fontWeight="700" textAnchor="middle">
-        Mailgun
+      <text x="575" y="303" fill="#b1bdcf" fontSize="11" textAnchor="start">
+        dashboards, funnels
       </text>
-      <rect x="760" y="210" width="110" height="60" rx="12" fill="#0d1324" stroke="rgba(255,255,255,0.16)" />
-      <text x="815" y="245" fill="#e8ecf2" fontSize="13" fontWeight="700" textAnchor="middle">
-        SMTP2GO
+
+      <rect x="760" y="140" width="120" height="60" rx="12" fill="#0d1324" stroke="rgba(255,255,255,0.16)" />
+      <text x="820" y="176" fill="#e8ecf2" fontSize="13" fontWeight="700" textAnchor="middle">
+        Custom SMTP
       </text>
 
       <path d="M200 110 L260 80" stroke="url(#edge)" strokeWidth="3" fill="none" markerEnd="url(#arrowhead)" />
       <path d="M200 110 L260 200" stroke="url(#edge)" strokeWidth="3" fill="none" markerEnd="url(#arrowhead)" />
       <path d="M440 80 L510 150" stroke="url(#edge)" strokeWidth="3" fill="none" markerEnd="url(#arrowhead)" />
       <path d="M440 210 L510 170" stroke="url(#edge)" strokeWidth="3" fill="none" markerEnd="url(#arrowhead)" />
-      <path d="M700 150 L760 90" stroke="url(#edge)" strokeWidth="3" fill="none" markerEnd="url(#arrowhead)" />
-      <path d="M700 160 L760 160" stroke="url(#edge)" strokeWidth="3" fill="none" markerEnd="url(#arrowhead)" />
-      <path d="M700 170 L760 230" stroke="url(#edge)" strokeWidth="3" fill="none" markerEnd="url(#arrowhead)" />
+      <path d="M605 225 L605 255" stroke="url(#edge)" strokeWidth="4" fill="none" markerEnd="url(#arrowhead)" />
+      <path d="M700 160 L760 170" stroke="url(#edge)" strokeWidth="3" fill="none" markerEnd="url(#arrowhead)" />
     </svg>
   </div>
 );
@@ -165,9 +162,9 @@ const ProfileDiagram = () => (
               <span className="pill-dot" />
               Customer profile
             </div>
-            <h4 className="text-xl font-semibold mt-3">Ava, CTO @Northwind</h4>
-            <p className="text-sm text-[#9da8ba]">ava@northwind.dev</p>
-            <p className="text-xs text-[#9da8ba] mt-1">Plan: Growth · Org ID: nw-1987</p>
+            <h3 className="text-xl font-semibold mt-3">Ava, CTO @Northwind</h3>
+            <p className="text-sm text-[#b1bdcf]">ava@northwind.dev</p>
+            <p className="text-xs text-[#b1bdcf] mt-1">Plan: Growth · Org ID: nw-1987</p>
           </div>
         </div>
         <div className="divider mb-4" />
@@ -183,7 +180,7 @@ const ProfileDiagram = () => (
               <div className="timeline-dot" />
               <div>
                 <p className="text-sm font-semibold text-white">{item.label}</p>
-                <p className="text-xs text-[#9da8ba]">{item.desc}</p>
+                <p className="text-xs text-[#b1bdcf]">{item.desc}</p>
               </div>
             </div>
           ))}
@@ -191,7 +188,7 @@ const ProfileDiagram = () => (
       </div>
       <div className="card-muted">
         <p className="badge mb-3">Insights</p>
-        <h4 className="text-xl font-semibold mb-3">Segment ready</h4>
+        <h3 className="text-xl font-semibold mb-3">Segment ready</h3>
         <p className="lead mb-4">
           Every web event and email outcome rolls into one profile. Build audiences on behaviour, traits, and message engagement without stitching tools.
         </p>
@@ -210,7 +207,7 @@ const EditorSketch = () => (
     <div className="grid-2 items-center">
       <div>
         <div className="badge mb-3">Template editor</div>
-        <h4 className="text-xl font-semibold mb-2">Code-grade templates</h4>
+        <h3 className="text-xl font-semibold mb-2">Code-grade templates</h3>
         <p className="lead">
           Build emails like product—partials, variables, and version-friendly snippets. Works whether you ship from SES, Mailgun, SMTP2GO, or your own SMTP.
         </p>
@@ -228,33 +225,6 @@ const EditorSketch = () => (
 );
 
 export default function Home() {
-  const [email, setEmail] = useState("");
-  const [submitted, setSubmitted] = useState(false);
-  const [ctaEmail, setCtaEmail] = useState("");
-  const [ctaSubmitted, setCtaSubmitted] = useState(false);
-  const [activeCodeTab, setActiveCodeTab] = useState("sdk");
-  const codeRef = useRef(null);
-
-  const submitWaitlist = async (e, emailValue, setEmailValue, setFlagValue) => {
-    e.preventDefault();
-    setFlagValue(false);
-    try {
-      const res = await fetch("/api/waitlist", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: emailValue }),
-      });
-      if (res.ok) {
-        setFlagValue(true);
-        setEmailValue("");
-      } else {
-        alert("Something went wrong. Try again.");
-      }
-    } catch (err) {
-      alert("Network error. Try again.");
-    }
-  };
-
   const reasons = [
     { title: "Unified stack", desc: "Analytics, messaging, and deliverability live together so teams act faster." },
     { title: "Keep your sending", desc: "Connect SES, Mailgun, SMTP2GO, or any SMTP and keep your reputation." },
@@ -274,7 +244,7 @@ export default function Home() {
           <span className="pill-dot" />
           GetFluxly
           </div>
-        <div className="flex items-center gap-3 text-sm text-[#9da8ba]">
+        <div className="flex items-center gap-3 text-sm text-[#b1bdcf]">
           <span className="hidden sm:inline">Built for technical founders</span>
           <div className="badge">JS SDK + HTTP</div>
           <div className="badge">BYO SMTP</div>
@@ -292,25 +262,14 @@ export default function Home() {
               Fluxly gives you product analytics and event tracking, unified customer profiles (a lightweight CDP), and lifecycle email that runs on the SMTP provider you already trust (SES, Mailgun, SMTP2GO, or any SMTP).
             </p>
             <div className="flex flex-wrap gap-3 mb-6">
-                  <button
-                className="cta-primary"
-                    type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  document.getElementById("waitlist-main")?.scrollIntoView({ behavior: "smooth" });
-                }}
-              >
+              <a href="#waitlist-main" className="cta-primary">
                 Join waitlist
-                  </button>
-                          <button
-                className="cta-secondary"
-                            type="button"
-                onClick={() => codeRef.current?.scrollIntoView({ behavior: "smooth" })}
-                          >
+              </a>
+              <a href="#sdk" className="cta-secondary">
                 View sample SDK
-                          </button>
+              </a>
             </div>
-            <p className="text-xs text-[#9da8ba]">
+            <p className="text-xs text-[#b1bdcf]">
               Dev-friendly. No vendor lock. Use the providers you already have.
             </p>
           </div>
@@ -324,7 +283,7 @@ export default function Home() {
         <div className="max-width surface p-6 grid-2 gap-10 items-center">
           <div>
             <p className="badge mb-2">5-minute install</p>
-            <h3 className="text-2xl font-semibold mb-3">Paste, track, ship</h3>
+            <h2 className="text-2xl font-semibold mb-3">Paste, track, ship</h2>
             <p className="lead mb-3">
               Drop the SDK or HTTP calls and you immediately see page views, events, and profiles. No dashboards to wire before data flows.
             </p>
@@ -348,7 +307,7 @@ export default function Home() {
         <div className="max-width">
           <div className="mb-8">
             <p className="badge mb-3">Why choose us</p>
-            <h3 className="text-2xl font-semibold mb-2">Keep control and move fast</h3>
+            <h2 className="text-2xl font-semibold mb-2">Keep control and move fast</h2>
             <p className="lead">
               Fluxly gives you a clear path to analytics and lifecycle email while you keep ownership of data and sending.
             </p>
@@ -392,50 +351,21 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section" ref={codeRef} id="sdk">
+      <section className="section" id="sdk">
         <div className="max-width grid-2 items-start gap-10">
           <div>
             <p className="badge mb-3">Developer quickstart</p>
-            <h3 className="text-3xl font-semibold mb-3">SDK or simple HTTP</h3>
+            <h2 className="text-3xl font-semibold mb-3">SDK or simple HTTP</h2>
             <p className="lead mb-4">
               Add 2–3 lines to start tracking product analytics and email events. No lock-in; switch providers without touching code.
             </p>
           </div>
-          <div className="surface p-5">
-            <div className="code-tabs" role="tablist" aria-label="SDK code samples">
-              <button
-                type="button"
-                className={`code-tab ${activeCodeTab === "sdk" ? "is-active" : ""}`}
-                onClick={() => setActiveCodeTab("sdk")}
-                aria-pressed={activeCodeTab === "sdk"}
-              >
-                JS SDK
-              </button>
-              <button
-                type="button"
-                className={`code-tab ${activeCodeTab === "http" ? "is-active" : ""}`}
-                onClick={() => setActiveCodeTab("http")}
-                aria-pressed={activeCodeTab === "http"}
-              >
-                HTTP API
-              </button>
-            </div>
-            {activeCodeTab === "sdk" ? (
-              <div className="code-stack">
-                <p className="code-meta">Install script</p>
-                <CodeBlock language="html" code={codeSamples.sdkInstall} />
-                <p className="code-meta">Track and identify</p>
-                <CodeBlock language="js" code={codeSamples.sdkTrack} />
-              </div>
-            ) : (
-              <div className="code-stack">
-                <p className="code-meta">Send events</p>
-                <CodeBlock language="python" code={codeSamples.httpPost} />
-                <p className="code-meta">Capture payments</p>
-                <CodeBlock language="python" code={codeSamples.httpHandler} />
-              </div>
-            )}
-          </div>
+          <HomeCodeTabs
+            sdkInstall={codeSamples.sdkInstall}
+            sdkTrack={codeSamples.sdkTrack}
+            httpPost={codeSamples.httpPost}
+            httpHandler={codeSamples.httpHandler}
+          />
         </div>
       </section>
 
@@ -446,7 +376,7 @@ export default function Home() {
           </div>
           <div>
             <p className="badge mb-3">Templates & campaigns</p>
-            <h3 className="text-3xl font-semibold mb-3">Treat emails like code</h3>
+            <h2 className="text-3xl font-semibold mb-3">Treat emails like code</h2>
             <p className="lead mb-4">
               Compose emails with reusable blocks, variables, and code-friendly structure. Ship updates without fighting ESP-specific builders.
             </p>
@@ -463,7 +393,7 @@ export default function Home() {
         <div className="max-width grid-2 items-center gap-10">
           <div>
             <p className="badge mb-3">Unified customer profile</p>
-            <h3 className="text-3xl font-semibold mb-3">One timeline per user</h3>
+            <h2 className="text-3xl font-semibold mb-3">One timeline per user</h2>
             <p className="lead mb-4">
               Every behavioural event and every email outcome lands in the same profile. Build segments on reality, not guesses.
             </p>
@@ -478,7 +408,7 @@ export default function Home() {
         <div className="max-width grid-2 gap-10">
           <div>
             <p className="badge mb-2">Lifecycle automations</p>
-            <h3 className="text-2xl font-semibold mb-3">Real-world flows</h3>
+            <h2 className="text-2xl font-semibold mb-3">Real-world flows</h2>
             <p className="lead mb-4">
               Trigger on behaviour, profile traits, and deliverability signals. Use your own SMTP provider so you keep reputation and logs.
             </p>
@@ -488,7 +418,7 @@ export default function Home() {
               {lifecycleFlows.map((flow) => (
                 <div key={flow.name}>
                   <p className="text-sm font-semibold text-white">{flow.name}</p>
-                  <p className="text-xs text-[#9da8ba]">{flow.detail}</p>
+                  <p className="text-xs text-[#b1bdcf]">{flow.detail}</p>
                 </div>
               ))}
             </div>
@@ -524,39 +454,14 @@ export default function Home() {
           <div className="grid-2 items-center gap-8">
             <div>
               <p className="badge mb-2">Launch waitlist</p>
-              <h3 className="text-3xl font-semibold mb-3">Get early access</h3>
+              <h2 className="text-3xl font-semibold mb-3">Get early access</h2>
               <p className="lead">
                 We’re onboarding teams that want analytics + lifecycle email without handing over their sending infra. Join the list—no spam, just product updates.
               </p>
             </div>
             <div>
-          {!submitted ? (
-            <form
-                  onSubmit={(e) => submitWaitlist(e, email, setEmail, setSubmitted)}
-                  className="flex flex-col gap-3"
-            >
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email"
-                    className="px-4 py-3 rounded-xl bg-[#0d1324] border border-white/10 text-white placeholder-gray-500 focus:outline-none w-full"
-                  />
-                  <button type="submit" className="cta-primary w-full justify-center">
-                    Join waitlist
-              </button>
-            </form>
-          ) : (
-                <div className="card-muted flex items-center gap-3">
-                  <div className="timeline-dot" />
-                  <div>
-                    <p className="font-semibold text-white">Thanks for joining!</p>
-                    <p className="text-xs text-[#9da8ba]">We’ll reach out with early access details.</p>
-                  </div>
-            </div>
-          )}
-              <p className="text-xs text-[#9da8ba] mt-3">
+              <HomeWaitlistForm />
+              <p className="text-xs text-[#b1bdcf] mt-3">
                 Prefer to talk infra? Email <a className="accent" href="mailto:hello@getfluxly.com">hello@getfluxly.com</a>
               </p>
             </div>
@@ -565,12 +470,13 @@ export default function Home() {
       </section>
 
       <footer className="section-narrow">
-        <div className="max-width flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-[#9da8ba]">
+        <div className="max-width flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-[#b1bdcf]">
           <div className="flex items-center gap-2">
             <span className="pill-dot" />
             Built for teams who own their stack.
           </div>
           <div className="flex items-center gap-4">
+            <a href="/analytics" className="cta-secondary text-xs">Docs</a>
             <a href="mailto:hello@getfluxly.com" className="hover:text-white">hello@getfluxly.com</a>
             <a href="https://twitter.com/madeByMD2" target="_blank" rel="noreferrer" className="hover:text-white">
             @madeByMD2
