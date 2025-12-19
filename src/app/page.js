@@ -289,7 +289,7 @@ export default function Home() {
               Paste a few lines of code, track everything, unify profiles, elevate lifecycle marketing.
             </h1>
             <p className="lead mb-6">
-              Fluxly gives you full-funnel analytics, unified customer profiles, and lifecycle email that runs on the SMTP provider you already trust (SES, Mailgun, SMTP2GO, or any SMTP).
+              Fluxly gives you product analytics and event tracking, unified customer profiles (a lightweight CDP), and lifecycle email that runs on the SMTP provider you already trust (SES, Mailgun, SMTP2GO, or any SMTP).
             </p>
             <div className="flex flex-wrap gap-3 mb-6">
                   <button
