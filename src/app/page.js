@@ -1,81 +1,249 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
+
+const codeSamples = {
+  template: [
+    '<span class="token tag">&lt;layout&gt;</span>',
+    '  <span class="token tag">&lt;hero</span> <span class="token attr-name">title</span>=<span class="token string">"Welcome to Fluxly"</span> <span class="token attr-name">cta</span>=<span class="token string">"Start tracking"</span> <span class="token punctuation">/&gt;</span>',
+    '  <span class="token tag">&lt;p&gt;</span>Hi <span class="token punctuation">{{</span><span class="token variable">user.name</span><span class="token punctuation">}}</span>,<span class="token tag">&lt;/p&gt;</span>',
+    '  <span class="token tag">&lt;p&gt;</span>We noticed <span class="token punctuation">{{</span><span class="token variable">event.last_page</span><span class="token punctuation">}}</span>.<span class="token tag">&lt;/p&gt;</span>',
+    '  <span class="token tag">&lt;cta</span> <span class="token attr-name">href</span>=<span class="token string">"{{cta.url}}"</span><span class="token tag">&gt;</span>Finish setup<span class="token tag">&lt;/cta&gt;</span>',
+    '<span class="token tag">&lt;/layout&gt;</span>',
+  ].join("\n"),
+  sdkInstall: [
+    '<span class="token comment">&lt;!-- Fluxly Analytics --&gt;</span>',
+    '<span class="token tag">&lt;script</span> <span class="token attr-name">src</span>=<span class="token string">"https://cdn.getfluxly.com/sdk.js"</span> <span class="token attr-name">async</span><span class="token tag">&gt;&lt;/script&gt;</span>',
+    '<span class="token tag">&lt;script&gt;</span>',
+    '  <span class="token variable">window</span>.<span class="token property">fluxly</span> <span class="token operator">=</span> <span class="token variable">window</span>.<span class="token property">fluxly</span> <span class="token operator">||</span> <span class="token punctuation">[]</span><span class="token punctuation">;</span>',
+    "",
+    '  <span class="token variable">fluxly</span>.<span class="token method">push</span><span class="token punctuation">([</span><span class="token string">"init"</span><span class="token punctuation">, {</span>',
+    '    <span class="token property">projectId</span><span class="token punctuation">:</span> <span class="token string">"demo-project-id"</span><span class="token punctuation">,</span>',
+    '    <span class="token property">apiKey</span><span class="token punctuation">:</span> <span class="token string">"pk_live_xxxxx"</span>',
+    '  <span class="token punctuation">}]);</span>',
+    "",
+    '  <span class="token comment">// Auto page view</span>',
+    '  <span class="token variable">fluxly</span>.<span class="token method">push</span><span class="token punctuation">([</span><span class="token string">"page"</span><span class="token punctuation">]);</span>',
+    '<span class="token tag">&lt;/script&gt;</span>',
+  ].join("\n"),
+  sdkTrack: [
+    '<span class="token comment">// Track events anywhere</span>',
+    '<span class="token variable">fluxly</span>.<span class="token method">track</span><span class="token punctuation">(</span><span class="token string">"button_click"</span><span class="token punctuation">, {</span>',
+    '  <span class="token property">button_id</span><span class="token punctuation">:</span> <span class="token string">"subscribe_cta"</span><span class="token punctuation">,</span>',
+    '  <span class="token property">page</span><span class="token punctuation">:</span> <span class="token string">"/pricing"</span>',
+    '<span class="token punctuation">});</span>',
+    "",
+    '<span class="token comment">// Identify users and create profiles</span>',
+    '<span class="token variable">fluxly</span>.<span class="token method">identify</span><span class="token punctuation">(</span><span class="token string">"user_123"</span><span class="token punctuation">, {</span>',
+    '  <span class="token property">email</span><span class="token punctuation">:</span> <span class="token string">"user@example.com"</span><span class="token punctuation">,</span>',
+    '  <span class="token property">name</span><span class="token punctuation">:</span> <span class="token string">"Dinesh"</span>',
+    '<span class="token punctuation">});</span>',
+  ].join("\n"),
+  httpPost: [
+    '<span class="token keyword">import</span> <span class="token builtin">requests</span>',
+    "",
+    '<span class="token builtin">requests</span>.<span class="token method">post</span><span class="token punctuation">(</span>',
+    '    <span class="token string">"https://api.getfluxly.com/v1/events"</span><span class="token punctuation">,</span>',
+    '    <span class="token property">headers</span><span class="token punctuation">=</span><span class="token punctuation">{</span>',
+    '        <span class="token string">"Content-Type"</span><span class="token punctuation">:</span> <span class="token string">"application/json"</span><span class="token punctuation">,</span>',
+    '        <span class="token string">"X-API-Key"</span><span class="token punctuation">:</span> <span class="token string">"pk_live_xxxxx"</span><span class="token punctuation">,</span>',
+    '    <span class="token punctuation">},</span>',
+    '    <span class="token property">json</span><span class="token punctuation">=</span><span class="token punctuation">{</span>',
+    '        <span class="token string">"event"</span><span class="token punctuation">:</span> <span class="token string">"subscription_created"</span><span class="token punctuation">,</span>',
+    '        <span class="token string">"profile_id"</span><span class="token punctuation">:</span> <span class="token string">"user_123"</span><span class="token punctuation">,</span>',
+    '        <span class="token string">"properties"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span>',
+    '            <span class="token string">"plan"</span><span class="token punctuation">:</span> <span class="token string">"starter"</span><span class="token punctuation">,</span>',
+    '            <span class="token string">"amount"</span><span class="token punctuation">:</span> <span class="token number">2900</span><span class="token punctuation">,</span>',
+    '            <span class="token string">"currency"</span><span class="token punctuation">:</span> <span class="token string">"USD"</span><span class="token punctuation">,</span>',
+    '        <span class="token punctuation">},</span>',
+    '        <span class="token string">"context"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span>',
+    '            <span class="token string">"source"</span><span class="token punctuation">:</span> <span class="token string">"django_backend"</span><span class="token punctuation">,</span>',
+    '        <span class="token punctuation">},</span>',
+    '    <span class="token punctuation">},</span>',
+    '    <span class="token property">timeout</span><span class="token punctuation">=</span><span class="token number">2</span><span class="token punctuation">,</span>',
+    '<span class="token punctuation">)</span>',
+  ].join("\n"),
+  httpHandler: [
+    '<span class="token keyword">def</span> <span class="token function">handle_stripe_payment</span><span class="token punctuation">(</span><span class="token variable">event</span><span class="token punctuation">):</span>',
+    '    <span class="token variable">user_id</span> <span class="token operator">=</span> <span class="token variable">event</span><span class="token punctuation">[</span><span class="token string">"data"</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string">"object"</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string">"customer"</span><span class="token punctuation">]</span>',
+    "",
+    '    <span class="token builtin">requests</span>.<span class="token method">post</span><span class="token punctuation">(</span>',
+    '        <span class="token string">"https://api.getfluxly.com/v1/events"</span><span class="token punctuation">,</span>',
+    '        <span class="token property">headers</span><span class="token punctuation">=</span><span class="token punctuation">{</span><span class="token string">"X-API-Key"</span><span class="token punctuation">:</span> <span class="token string">"pk_live_xxxxx"</span><span class="token punctuation">},</span>',
+    '        <span class="token property">json</span><span class="token punctuation">=</span><span class="token punctuation">{</span>',
+    '            <span class="token string">"event"</span><span class="token punctuation">:</span> <span class="token string">"payment_succeeded"</span><span class="token punctuation">,</span>',
+    '            <span class="token string">"profile_id"</span><span class="token punctuation">:</span> <span class="token variable">user_id</span><span class="token punctuation">,</span>',
+    '            <span class="token string">"properties"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span>',
+    '                <span class="token string">"amount"</span><span class="token punctuation">:</span> <span class="token variable">event</span><span class="token punctuation">[</span><span class="token string">"data"</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string">"object"</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string">"amount"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>',
+    '                <span class="token string">"currency"</span><span class="token punctuation">:</span> <span class="token string">"USD"</span><span class="token punctuation">,</span>',
+    '            <span class="token punctuation">},</span>',
+    '        <span class="token punctuation">},</span>',
+    '    <span class="token punctuation">)</span>',
+  ].join("\n"),
+};
+
+const CodeBlock = ({ language, code }) => (
+  <pre className={`code-block code-block--${language}`} data-lang={language}>
+    <code dangerouslySetInnerHTML={{ __html: code }} />
+  </pre>
+);
+
+const ArchitectureDiagram = () => (
+  <div className="diagram">
+    <svg viewBox="0 0 900 320" className="w-full" role="img" aria-label="Fluxly architecture diagram">
+      <defs>
+        <linearGradient id="edge" x1="0%" x2="100%" y1="0%" y2="0%">
+          <stop offset="0%" stopColor="rgba(252,163,17,0.25)" />
+          <stop offset="100%" stopColor="rgba(255,190,69,0.65)" />
+        </linearGradient>
+        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="8" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="rgba(252,163,17,0.8)" />
+        </marker>
+      </defs>
+      <rect x="40" y="70" width="160" height="80" rx="16" fill="#0d1324" stroke="rgba(255,255,255,0.16)" />
+      <text x="120" y="110" fill="#e8ecf2" fontSize="16" fontWeight="600" textAnchor="middle">
+        Your App
+      </text>
+      <text x="120" y="132" fill="#9da8ba" fontSize="12" textAnchor="middle">
+        web & backend
+      </text>
+
+      <rect x="260" y="40" width="180" height="80" rx="16" fill="#0d1324" stroke="rgba(255,255,255,0.16)" />
+      <text x="350" y="82" fill="#e8ecf2" fontSize="16" fontWeight="600" textAnchor="middle">
+        JS SDK
+      </text>
+      <text x="350" y="104" fill="#9da8ba" fontSize="12" textAnchor="middle">
+        drop-in front-end
+      </text>
+
+      <rect x="260" y="170" width="180" height="80" rx="16" fill="#0d1324" stroke="rgba(255,255,255,0.16)" />
+      <text x="350" y="212" fill="#e8ecf2" fontSize="16" fontWeight="600" textAnchor="middle">
+        HTTP POST
+      </text>
+      <text x="350" y="234" fill="#9da8ba" fontSize="12" textAnchor="middle">
+        server-to-server
+      </text>
+
+      <rect x="510" y="95" width="190" height="130" rx="18" fill="#0f1628" stroke="rgba(255,255,255,0.2)" />
+      <text x="605" y="150" fill="#e8ecf2" fontSize="16" fontWeight="700" textAnchor="middle">
+        Events & Profiles
+      </text>
+      <text x="605" y="172" fill="#9da8ba" fontSize="12" textAnchor="middle">
+        timelines, traits, segments
+      </text>
+
+      <rect x="760" y="60" width="110" height="60" rx="12" fill="#0d1324" stroke="rgba(255,255,255,0.16)" />
+      <text x="815" y="95" fill="#e8ecf2" fontSize="13" fontWeight="700" textAnchor="middle">
+        SES
+      </text>
+      <rect x="760" y="135" width="110" height="60" rx="12" fill="#0d1324" stroke="rgba(255,255,255,0.16)" />
+      <text x="815" y="170" fill="#e8ecf2" fontSize="13" fontWeight="700" textAnchor="middle">
+        Mailgun
+      </text>
+      <rect x="760" y="210" width="110" height="60" rx="12" fill="#0d1324" stroke="rgba(255,255,255,0.16)" />
+      <text x="815" y="245" fill="#e8ecf2" fontSize="13" fontWeight="700" textAnchor="middle">
+        SMTP2GO
+      </text>
+
+      <path d="M200 110 L260 80" stroke="url(#edge)" strokeWidth="3" fill="none" markerEnd="url(#arrowhead)" />
+      <path d="M200 110 L260 200" stroke="url(#edge)" strokeWidth="3" fill="none" markerEnd="url(#arrowhead)" />
+      <path d="M440 80 L510 150" stroke="url(#edge)" strokeWidth="3" fill="none" markerEnd="url(#arrowhead)" />
+      <path d="M440 210 L510 170" stroke="url(#edge)" strokeWidth="3" fill="none" markerEnd="url(#arrowhead)" />
+      <path d="M700 150 L760 90" stroke="url(#edge)" strokeWidth="3" fill="none" markerEnd="url(#arrowhead)" />
+      <path d="M700 160 L760 160" stroke="url(#edge)" strokeWidth="3" fill="none" markerEnd="url(#arrowhead)" />
+      <path d="M700 170 L760 230" stroke="url(#edge)" strokeWidth="3" fill="none" markerEnd="url(#arrowhead)" />
+    </svg>
+  </div>
+);
+
+const ProfileDiagram = () => (
+  <div className="diagram">
+    <div className="grid-2 items-start">
+      <div className="card-muted">
+        <div className="flex items-center gap-10 mb-6">
+          <div>
+            <div className="pill">
+              <span className="pill-dot" />
+              Customer profile
+            </div>
+            <h4 className="text-xl font-semibold mt-3">Ava, CTO @Northwind</h4>
+            <p className="text-sm text-[#9da8ba]">ava@northwind.dev</p>
+            <p className="text-xs text-[#9da8ba] mt-1">Plan: Growth · Org ID: nw-1987</p>
+          </div>
+        </div>
+        <div className="divider mb-4" />
+        <div className="flex flex-col gap-4">
+          {[
+            { label: "Identified", desc: "identify('ava@northwind.dev', { plan: 'growth' })" },
+            { label: "Page view", desc: "GET /docs/webhooks" },
+            { label: "Custom event", desc: "track('workspace_invited', { seats: 3 })" },
+            { label: "Email sent", desc: "Onboarding step 2 via SES" },
+            { label: "Email opened", desc: "Latency guardrails article" },
+          ].map((item) => (
+            <div key={item.label} className="flex items-start gap-3">
+              <div className="timeline-dot" />
+              <div>
+                <p className="text-sm font-semibold text-white">{item.label}</p>
+                <p className="text-xs text-[#9da8ba]">{item.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="card-muted">
+        <p className="badge mb-3">Insights</p>
+        <h4 className="text-xl font-semibold mb-3">Segment ready</h4>
+        <p className="lead mb-4">
+          Every web event and email outcome rolls into one profile. Build audiences on behaviour, traits, and message engagement without stitching tools.
+        </p>
+        <ul className="list-disc list-inside text-sm text-[#e8ecf2] space-y-2">
+          <li>Lifecycle cohorts (onboarding, activation, churn-risk)</li>
+          <li>Deliverability + engagement signals together</li>
+          <li>API-first: fetch or sync profiles anywhere</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+);
+
+const EditorSketch = () => (
+  <div className="diagram">
+    <div className="grid-2 items-center">
+      <div>
+        <div className="badge mb-3">Template editor</div>
+        <h4 className="text-xl font-semibold mb-2">Code-grade templates</h4>
+        <p className="lead">
+          Build emails like product—partials, variables, and version-friendly snippets. Works whether you ship from SES, Mailgun, SMTP2GO, or your own SMTP.
+        </p>
+      </div>
+      <div className="card-muted">
+        <div className="flex gap-2 mb-3">
+          <span className="badge">HTML</span>
+          <span className="badge">Handlebars</span>
+          <span className="badge">MJML</span>
+        </div>
+        <CodeBlock language="html" code={codeSamples.template} />
+      </div>
+    </div>
+  </div>
+);
 
 export default function Home() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [ctaEmail, setCtaEmail] = useState("");
   const [ctaSubmitted, setCtaSubmitted] = useState(false);
-  const featuresRef = useRef(null);
-  const [isTouch, setIsTouch] = useState(false);
+  const [activeCodeTab, setActiveCodeTab] = useState("sdk");
+  const codeRef = useRef(null);
 
-  // (We will wire analytics later)
-  useEffect(() => {
-    // placeholder
-  }, []);
-
-  // Cursor-follow glow and ring
-  useEffect(() => {
-    const glow = document.getElementById("cursor-glow");
-    const handleMove = (e) => {
-      if (glow) {
-        glow.style.left = `${e.clientX}px`;
-        glow.style.top = `${e.clientY}px`;
-      }
-    };
-    window.addEventListener("mousemove", handleMove);
-    return () => window.removeEventListener("mousemove", handleMove);
-  }, []);
-
-  // Magnetic buttons effect
-  useEffect(() => {
-    const buttons = document.querySelectorAll(".magnetic-btn");
-    buttons.forEach((btn) => {
-      const strength = 25;
-      const handleMove = (e) => {
-        const rect = btn.getBoundingClientRect();
-        const x = e.clientX - rect.left - rect.width / 2;
-        const y = e.clientY - rect.top - rect.height / 2;
-        btn.style.transform = `translate(${x / strength}px, ${y / strength}px)`;
-      };
-      const reset = () => {
-        btn.style.transform = "translate(0,0)";
-      };
-      btn.addEventListener("mousemove", handleMove);
-      btn.addEventListener("mouseleave", reset);
-    });
-  }, []);
-
-  useEffect(() => {
-    const detect = () =>
-      setIsTouch(
-        typeof window !== "undefined" &&
-          (window.matchMedia("(pointer: coarse)").matches ||
-            "ontouchstart" in window)
-      );
-    detect();
-    window.addEventListener("resize", detect);
-    return () => window.removeEventListener("resize", detect);
-  }, []);
-
-  const submitWaitlist = async (
-    e,
-    emailValue,
-    setEmailValue,
-    setFlagValue
-  ) => {
+  const submitWaitlist = async (e, emailValue, setEmailValue, setFlagValue) => {
     e.preventDefault();
     setFlagValue(false);
-
     try {
       const res = await fetch("/api/waitlist", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: emailValue }),
       });
-
       if (res.ok) {
         setFlagValue(true);
         setEmailValue("");
@@ -87,200 +255,285 @@ export default function Home() {
     }
   };
 
-  const analyticsNodes = [
-    {
-      label: "Funnels",
-      desc: "Understand where your users are coming from and where they fall off.",
-    },
-    {
-      label: "Usage",
-      desc: "Feature adoption, depth of engagement, and the steps that predict expansion.",
-    },
-    {
-      label: "Churn",
-      desc: "Quiet logins, billing pauses, and risk markers surfaced before they leave.",
-    },
-    {
-      label: "Segments",
-      desc: "Build cohorts from behavior, traits, and lifecycle stage that auto-refresh.",
-    },
+  const reasons = [
+    { title: "Unified stack", desc: "Analytics, messaging, and deliverability live together so teams act faster." },
+    { title: "Keep your sending", desc: "Connect SES, Mailgun, SMTP2GO, or any SMTP and keep your reputation." },
+    { title: "Single customer view", desc: "Events and email outcomes meet in one profile with a clear timeline." },
   ];
 
-  const lifecycleNodes = [
-    {
-      label: "Signals",
-      desc: "Send emails according to signals, segments, and milestones the moment they happen.",
-    },
-    {
-      label: "Guardrails",
-      desc: "Keep audiences clean with exclusions, rate limits, and journeys that respect fatigue.",
-    },
-    {
-      label: "Builder",
-      desc: "Branching journeys with delays, conditions, A/B splits, and webhooks in minutes.",
-    },
+  const lifecycleFlows = [
+    { name: "Onboarding drip", detail: "Page view + event triggers; branch by integration completed." },
+    { name: "Trial expiry", detail: "Detect idle users, send reminders via your SMTP provider, suppress fatigued segments." },
+    { name: "Churn win back", detail: "Re-engage on inactivity + missed invoices; include product usage context." },
   ];
-
-  const timelineNodes = [
-    {
-      label: "Events",
-      desc: "Every event from product, billing, and support lives in one shared stream.",
-    },
-    {
-      label: "Messages",
-      desc: "All triggered and bulk sends line up next to the user actions that caused them.",
-    },
-    {
-      label: "Health",
-      desc: "Delivery, opens, clicks, and status roll into the same view for faster answers.",
-    },
-  ];
-
-  const BranchBlock = ({
-    eyebrow,
-    title,
-    caption,
-    nodes,
-    variant = "primary",
-    isTouchDevice,
-  }) => {
-    const [openDetail, setOpenDetail] = useState(false);
-    const [titleHovered, setTitleHovered] = useState(false);
-    const [activeNode, setActiveNode] = useState(null);
-
-    const showDetail = openDetail || (!isTouchDevice && titleHovered);
-
-    const baseBg =
-      variant === "timeline"
-        ? "bg-gradient-to-b from-[#111827]/80 to-[#0b1120]/90"
-        : "bg-gradient-to-b from-[#0f172a]/80 to-[#0b1120]/90";
 
     return (
-      <div className="relative group">
-        <div className="hidden lg:block absolute left-1/2 -top-8 w-px h-8 -translate-x-1/2 bg-gradient-to-b from-[#FCA311]/60 via-[#14213D]/40 to-transparent"></div>
-        <div
-          className={`rounded-xl p-4 border border-white/10 shadow-xl backdrop-blur-xl h-full flex flex-col items-center gap-3 ${baseBg}`}
-        >
-          <div className="text-[11px] uppercase tracking-[0.2em] text-[#FCA311] font-semibold">
-            {eyebrow}
+    <main className="page-shell px-6">
+      <header className="max-width py-8 flex items-center justify-between">
+        <div className="pill">
+          <span className="pill-dot" />
+          GetFluxly
           </div>
-          <button
-            type="button"
-            onClick={() => (isTouchDevice ? setOpenDetail((prev) => !prev) : null)}
-            onMouseEnter={() => (!isTouchDevice ? setTitleHovered(true) : null)}
-            onMouseLeave={() => (!isTouchDevice ? setTitleHovered(false) : null)}
-            className="px-4 py-2 rounded-full bg-white/5 border border-white/10 text-white text-sm font-semibold shadow-sm text-center hover:border-[#FCA311]/50 transition"
-          >
-            {title}
-          </button>
-          <div
-            className={`text-gray-300 mt-1 text-xs text-center px-3 transition ${
-              showDetail ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-1"
-            }`}
-          >
-            {caption}
+        <div className="flex items-center gap-3 text-sm text-[#9da8ba]">
+          <span className="hidden sm:inline">Built for technical founders</span>
+          <div className="badge">JS SDK + HTTP</div>
+          <div className="badge">BYO SMTP</div>
           </div>
-          <div className="hidden lg:block w-px h-5 bg-gradient-to-b from-[#FCA311]/60 via-[#14213D]/40 to-transparent"></div>
+      </header>
 
-          <div className="relative w-full pt-4">
-            <div className="hidden md:block absolute left-[8%] right-[8%] top-2 h-px bg-gradient-to-r from-transparent via-[#FCA311]/40 to-transparent"></div>
-            <div className="flex flex-wrap justify-center gap-3 md:gap-4">
-              {nodes.map((node) => (
-                <div
-                  key={node.label}
-                  className="group relative flex flex-col items-center"
-                  onMouseEnter={() =>
-                    !isTouchDevice ? setActiveNode(node.label) : null
-                  }
-                  onMouseLeave={() =>
-                    !isTouchDevice ? setActiveNode(null) : null
-                  }
-                >
-                  <div className="hidden md:block absolute -top-3 h-4 w-px bg-gradient-to-b from-[#FCA311]/50 via-[#14213D]/30 to-transparent"></div>
+      <section className="section">
+        <div className="max-width grid-2 items-center gap-12">
+          <div>
+            <p className="badge mb-4">Customer analytics and messaging on your infra</p>
+            <h1 className="text-4xl sm:text-5xl font-bold leading-tight mb-4">
+              Paste a few lines of code, track everything, unify profiles, elevate lifecycle marketing.
+            </h1>
+            <p className="lead mb-6">
+              Fluxly gives you product analytics and event tracking, unified customer profiles (a lightweight CDP), and lifecycle email that runs on the SMTP provider you already trust (SES, Mailgun, SMTP2GO, or any SMTP).
+            </p>
+            <div className="flex flex-wrap gap-3 mb-6">
                   <button
+                className="cta-primary"
                     type="button"
-                    onClick={() =>
-                      isTouchDevice
-                        ? setActiveNode((prev) =>
-                            prev === node.label ? null : node.label
-                          )
-                        : null
-                    }
-                    className="px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-xs shadow-sm cursor-default hover:border-[#FCA311]/50 transition"
-                  >
-                    {node.label}
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.getElementById("waitlist-main")?.scrollIntoView({ behavior: "smooth" });
+                }}
+              >
+                Join waitlist
                   </button>
-                  {activeNode === node.label &&
-                    (isTouchDevice ? (
-                      <div className="fixed inset-0 z-50 flex items-center justify-center px-6 py-10 bg-black/40 backdrop-blur-sm">
-                        <div className="relative w-full max-w-sm rounded-xl bg-[#0f1628] border border-white/15 shadow-2xl p-4 text-xs text-gray-200 text-left">
                           <button
+                className="cta-secondary"
                             type="button"
-                            onClick={() => setActiveNode(null)}
-                            className="absolute top-2 right-2 text-gray-400 hover:text-white text-sm"
-                            aria-label="Close detail"
+                onClick={() => codeRef.current?.scrollIntoView({ behavior: "smooth" })}
                           >
-                            ×
+                View sample SDK
                           </button>
-                          <p className="font-semibold text-white mb-1">{node.label}</p>
-                          {node.desc}
+            </div>
+            <p className="text-xs text-[#9da8ba]">
+              Dev-friendly. No vendor lock. Use the providers you already have.
+            </p>
+          </div>
+          <div className="surface p-6">
+            <ArchitectureDiagram />
+          </div>
+        </div>
+      </section>
+
+      <section className="section-narrow">
+        <div className="max-width surface p-6 grid-2 gap-10 items-center">
+          <div>
+            <p className="badge mb-2">5-minute install</p>
+            <h3 className="text-2xl font-semibold mb-3">Paste, track, ship</h3>
+            <p className="lead mb-3">
+              Drop the SDK or HTTP calls and you immediately see page views, events, and profiles. No dashboards to wire before data flows.
+            </p>
+            <ul className="list-disc list-inside text-sm text-[#e8ecf2] space-y-2">
+              <li>Paste the script or import via npm and init with your key.</li>
+              <li>Track events from front-end or backend with one function.</li>
+              <li>Identify users to merge sessions into unified profiles.</li>
+            </ul>
+          </div>
+          <div className="card-muted">
+            <p className="badge mb-2">What you get instantly</p>
+            <p className="lead">Auto page views, event stream, unified profiles, provider-ready email sends.</p>
+            <p className="text-sm text-[#e8ecf2] mt-3">
+              Track which sources drive revenue and traffic so you double down on what matters.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="section-narrow">
+        <div className="max-width">
+          <div className="mb-8">
+            <p className="badge mb-3">Why choose us</p>
+            <h3 className="text-2xl font-semibold mb-2">Keep control and move fast</h3>
+            <p className="lead">
+              Fluxly gives you a clear path to analytics and lifecycle email while you keep ownership of data and sending.
+            </p>
+          </div>
+          <div className="grid-3">
+            {reasons.map((reason) => (
+              <div key={reason.title} className="card-muted h-full">
+                <p className="badge mb-3">{reason.title}</p>
+                <p className="lead">{reason.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section" id="architecture">
+        <div className="max-width grid-2 items-start gap-10">
+          <div>
+            <p className="badge mb-3">How Fluxly fits your stack</p>
+            <h2 className="text-3xl font-semibold mb-3">Analytics, profiles, and email on your infra</h2>
+            <p className="lead mb-4">
+              Ingest via JS SDK or HTTP POST. Fluxly unifies every user into a single profile with page views, custom events, and email outcomes, then sends through SES, Mailgun, SMTP2GO, or any SMTP you already use.
+            </p>
+            <ul className="list-disc list-inside text-sm text-[#e8ecf2] space-y-2">
+              <li>Ingest: <span className="accent">SDK</span> for web, <span className="accent">HTTP</span> for backends.</li>
+              <li>Profile: timelines, traits, and segments ready for automation and reporting.</li>
+              <li>Send: plug in credentials for SES, Mailgun, SMTP2GO, or your own SMTP and keep deliverability ownership.</li>
+            </ul>
+          </div>
+          <div className="surface p-6 card-muted">
+            <p className="badge mb-2">Bring your own email</p>
+            <p className="lead mb-3">
+              Fluxly connects to your existing providers instead of forcing yet another ESP.
+            </p>
+            <ul className="list-disc list-inside text-sm text-[#e8ecf2] space-y-1">
+              <li>SES for high-volume transactional</li>
+              <li>Mailgun for marketing or product updates</li>
+              <li>SMTP2GO or any SMTP for regional or legacy setups</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section className="section" ref={codeRef} id="sdk">
+        <div className="max-width grid-2 items-start gap-10">
+          <div>
+            <p className="badge mb-3">Developer quickstart</p>
+            <h3 className="text-3xl font-semibold mb-3">SDK or simple HTTP</h3>
+            <p className="lead mb-4">
+              Add 2–3 lines to start tracking product analytics and email events. No lock-in; switch providers without touching code.
+            </p>
+          </div>
+          <div className="surface p-5">
+            <div className="code-tabs" role="tablist" aria-label="SDK code samples">
+              <button
+                type="button"
+                className={`code-tab ${activeCodeTab === "sdk" ? "is-active" : ""}`}
+                onClick={() => setActiveCodeTab("sdk")}
+                aria-pressed={activeCodeTab === "sdk"}
+              >
+                JS SDK
+              </button>
+              <button
+                type="button"
+                className={`code-tab ${activeCodeTab === "http" ? "is-active" : ""}`}
+                onClick={() => setActiveCodeTab("http")}
+                aria-pressed={activeCodeTab === "http"}
+              >
+                HTTP API
+              </button>
+            </div>
+            {activeCodeTab === "sdk" ? (
+              <div className="code-stack">
+                <p className="code-meta">Install script</p>
+                <CodeBlock language="html" code={codeSamples.sdkInstall} />
+                <p className="code-meta">Track and identify</p>
+                <CodeBlock language="js" code={codeSamples.sdkTrack} />
+              </div>
+            ) : (
+              <div className="code-stack">
+                <p className="code-meta">Send events</p>
+                <CodeBlock language="python" code={codeSamples.httpPost} />
+                <p className="code-meta">Capture payments</p>
+                <CodeBlock language="python" code={codeSamples.httpHandler} />
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="max-width grid-2 items-center gap-10">
+          <div className="surface p-6">
+            <EditorSketch />
+          </div>
+          <div>
+            <p className="badge mb-3">Templates & campaigns</p>
+            <h3 className="text-3xl font-semibold mb-3">Treat emails like code</h3>
+            <p className="lead mb-4">
+              Compose emails with reusable blocks, variables, and code-friendly structure. Ship updates without fighting ESP-specific builders.
+            </p>
+            <ul className="list-disc list-inside text-sm text-[#e8ecf2] space-y-2">
+              <li>Reusable partials and layouts</li>
+              <li>Dynamic variables from profile traits & events</li>
+              <li>Preview deliverability per provider</li>
+            </ul>
                         </div>
                       </div>
-                    ) : (
-                      <div className="absolute left-1/2 top-[calc(100%+10px)] w-56 -translate-x-1/2 z-50 opacity-0 group-hover:opacity-100 group-hover:translate-y-0 translate-y-1 transition">
-                        <div className="relative rounded-lg bg-[#0f1628] border border-white/10 shadow-2xl p-3 text-xs text-gray-200 text-left">
-                          {node.desc}
+      </section>
+
+      <section className="section">
+        <div className="max-width grid-2 items-center gap-10">
+          <div>
+            <p className="badge mb-3">Unified customer profile</p>
+            <h3 className="text-3xl font-semibold mb-3">One timeline per user</h3>
+            <p className="lead mb-4">
+              Every behavioural event and every email outcome lands in the same profile. Build segments on reality, not guesses.
+            </p>
+          </div>
+          <div className="surface p-6">
+            <ProfileDiagram />
                         </div>
                       </div>
-                    ))}
+      </section>
+
+      <section className="section-narrow">
+        <div className="max-width grid-2 gap-10">
+          <div>
+            <p className="badge mb-2">Lifecycle automations</p>
+            <h3 className="text-2xl font-semibold mb-3">Real-world flows</h3>
+            <p className="lead mb-4">
+              Trigger on behaviour, profile traits, and deliverability signals. Use your own SMTP provider so you keep reputation and logs.
+            </p>
+          </div>
+          <div className="card-muted">
+            <div className="flex flex-col gap-4">
+              {lifecycleFlows.map((flow) => (
+                <div key={flow.name}>
+                  <p className="text-sm font-semibold text-white">{flow.name}</p>
+                  <p className="text-xs text-[#9da8ba]">{flow.detail}</p>
                 </div>
               ))}
             </div>
           </div>
         </div>
-      </div>
-    );
-  };
+      </section>
 
-  return (
-    <main className="min-h-screen text-[#E5E5E5] px-6 py-20 relative overflow-visible bg-gradient-to-b from-[#0b0e18] via-[#0f1628] to-[#000000]">
-      <div className="fixed top-6 left-6 z-50">
-        <div className="flex items-center gap-2 px-3 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-md text-[#FCA311] font-semibold">
-          <span className="w-2.5 h-2.5 rounded-full bg-[#FCA311] animate-pulse shadow-[0_0_0_6px_rgba(252,163,17,0.2)]"></span>
-          GetFluxly
+      <section className="section-narrow">
+        <div className="max-width surface p-6">
+          <div className="grid-3">
+            <div>
+              <p className="badge mb-2">Deliverability first</p>
+              <p className="lead">Own the SMTP layer; Fluxly orchestrates without taking over your sending reputation.</p>
+            </div>
+            <div>
+              <p className="badge mb-2">API-first</p>
+              <p className="lead">SDK + HTTP for ingest; REST for exporting profiles, events, and journeys.</p>
+            </div>
+            <div>
+              <p className="badge mb-2">Privacy aware</p>
+              <p className="lead">No third-party pixels here. You control where data lives and what is sent.</p>
         </div>
+            <div>
+              <p className="badge mb-2">Growth clarity</p>
+              <p className="lead">See which sources drive revenue and traffic so you focus on what matters most.</p>
+            </div>
       </div>
-      <div
-        id="cursor-glow"
-        className="pointer-events-none fixed w-64 h-64 bg-[radial-gradient(circle,_rgba(252,163,17,0.35),_rgba(20,33,61,0.05),_transparent)] rounded-full blur-3xl transform -translate-x-1/2 -translate-y-1/2 z-0 opacity-80 mix-blend-screen"
-      ></div>
+        </div>
+      </section>
 
-      <section className="min-h-[85vh] flex flex-col justify-between items-center text-center pt-20 pb-14 gap-8 relative">
-        <div className="max-w-2xl text-white animate-floatUp px-4">
-          <h1 className="text-4xl sm:text-5xl font-bold font-hero mb-3 leading-tight bg-gradient-to-r from-[#FCA311] via-[#ffd166] to-[#FCA311] text-transparent bg-clip-text animate-shimmer animate-sparkle relative z-20 drop-shadow-[0_12px_45px_rgba(252,163,17,0.35)]">
-            The all in one customer lifecycle platform for modern SaaS
-          </h1>
-
-          <p className="text-xs sm:text-sm font-semibold uppercase tracking-[0.24em] text-[#FCA311] mb-3">
-            Track. Segment. Automate. Deliver.
-          </p>
-
-          <p className="text-lg text-gray-300 mb-3">
-            Track user behaviour, build segments, send automated messages, and monitor deliverability — all in one simple, affordable tool.
-          </p>
-          <p className="text-sm text-gray-300 mb-4">
-            Dev-friendly and welcoming to every team: plug in your own infra, webhooks, and APIs without vendor lock.
-          </p>
-          <p className="text-sm text-gray-400 mb-8">
-            No bloated dashboards, no complex setups, no expensive ESP lock in. Analytics, segmentation, messaging, deliverability — in one unified platform.
-          </p>
-
+      <section className="section" id="waitlist-main">
+        <div className="max-width surface p-8">
+          <div className="grid-2 items-center gap-8">
+            <div>
+              <p className="badge mb-2">Launch waitlist</p>
+              <h3 className="text-3xl font-semibold mb-3">Get early access</h3>
+              <p className="lead">
+                We’re onboarding teams that want analytics + lifecycle email without handing over their sending infra. Join the list—no spam, just product updates.
+              </p>
+            </div>
+            <div>
           {!submitted ? (
             <form
-              onSubmit={(e) =>
-                submitWaitlist(e, email, setEmail, setSubmitted)
-              }
-              className="flex gap-2 justify-center"
+                  onSubmit={(e) => submitWaitlist(e, email, setEmail, setSubmitted)}
+                  className="flex flex-col gap-3"
             >
               <input
                 type="email"
@@ -288,193 +541,43 @@ export default function Home() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
-                className="px-3 py-2 rounded-lg w-64 sm:w-72 md:w-96 bg-[#0d1324] text-white placeholder-gray-500 border border-white/10 focus:ring-2 focus:ring-[#FCA311] focus:outline-none shadow-inner shadow-black/30"
-              />
-              <button
-                type="submit"
-                className="bg-gradient-to-r from-[#FCA311] to-[#ffbe45] hover:opacity-90 px-4 py-2 rounded-lg font-semibold text-sm sm:text-base text-black shadow-lg animate-softBounce animate-greenGlow magnetic-btn"
-              >
-                Join Waitlist
+                    className="px-4 py-3 rounded-xl bg-[#0d1324] border border-white/10 text-white placeholder-gray-500 focus:outline-none w-full"
+                  />
+                  <button type="submit" className="cta-primary w-full justify-center">
+                    Join waitlist
               </button>
             </form>
           ) : (
-            <div className="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-[#FCA311] to-[#ffbe45] text-black font-semibold animate-successPulse animate-greenGlow shadow-lg">
-              <svg
-                viewBox="0 0 24 24"
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              Thank you for joining us!
+                <div className="card-muted flex items-center gap-3">
+                  <div className="timeline-dot" />
+                  <div>
+                    <p className="font-semibold text-white">Thanks for joining!</p>
+                    <p className="text-xs text-[#9da8ba]">We’ll reach out with early access details.</p>
+                  </div>
             </div>
           )}
-
-          <p className="text-sm text-gray-400 mt-10">
-            Zero spam. Only useful updates.
-          </p>
-        </div>
-
-        <div className="flex flex-col items-center gap-2 mb-10 md:mb-16">
-          <button
-            type="button"
-            onClick={() =>
-              featuresRef.current?.scrollIntoView({ behavior: "smooth" })
-            }
-            className="text-[#FCA311] hover:text-white transition p-2 magnetic-btn"
-            aria-label="Scroll to more details"
-          >
-            <svg
-              className="w-8 h-8 animate-bounce drop-shadow-lg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M6 9l6 6 6-6" />
-            </svg>
-          </button>
-        </div>
-      </section>
-
-      <article className="mt-24" ref={featuresRef}>
-        <div className="max-w-6xl mx-auto animate-floatUp relative z-20">
-          <h2 className="text-4xl sm:text-5xl font-extrabold mb-6 text-center bg-gradient-to-r from-[#FCA311] via-[#ffd166] to-white text-transparent bg-clip-text drop-shadow-[0_10px_40px_rgba(252,163,17,0.35)] leading-tight">
-            See the lifecycle as one graph
-          </h2>
-
-          <p className="text-gray-300 text-center max-w-3xl mx-auto mb-16 text-lg">
-            User activity fans into analytics and lifecycle marketing, then rejoins into one unified timeline. Modern branching visuals so teams can track, segment, automate, and deliver without hopping tools.
-          </p>
-
-          <div className="relative mt-12">
-            <div className="pointer-events-none absolute -inset-6 bg-[radial-gradient(circle_at_center,_rgba(252,163,17,0.14),_transparent_50%)] blur-3xl"></div>
-
-            <div className="flex flex-col items-center gap-3">
-              <div className="rounded-full px-5 py-2 bg-white/5 border border-white/10 text-white font-semibold shadow-lg backdrop-blur">
-                User activity
-              </div>
-              <div className="hidden lg:block w-px h-8 bg-gradient-to-b from-[#FCA311]/60 via-[#14213D]/40 to-transparent"></div>
-              <div className="hidden lg:block relative w-full lg:w-4/5 h-12">
-                <div className="absolute left-[12%] right-[12%] top-6 h-px bg-gradient-to-r from-transparent via-[#FCA311]/60 to-transparent"></div>
-                <div className="absolute left-[22%] top-0 h-6 w-px bg-gradient-to-b from-[#FCA311]/60 via-[#14213D]/40 to-transparent"></div>
-                <div className="absolute left-1/2 top-0 h-6 w-px -translate-x-1/2 bg-gradient-to-b from-[#FCA311]/60 via-[#14213D]/40 to-transparent"></div>
-                <div className="absolute right-[22%] top-0 h-6 w-px bg-gradient-to-b from-[#FCA311]/60 via-[#14213D]/40 to-transparent"></div>
-              </div>
-            </div>
-
-            <div className="relative mt-6">
-              <div className="hidden lg:block absolute left-[10%] right-[10%] top-6 h-px bg-gradient-to-r from-transparent via-[#FCA311]/55 to-transparent"></div>
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 relative z-10 -mt-1 lg:-mt-2">
-                <BranchBlock
-                  eyebrow="Analytics"
-                  title="Product view"
-                  caption="All your product analytics in one place."
-                  nodes={analyticsNodes}
-                  isTouchDevice={isTouch}
-                />
-                <BranchBlock
-                  eyebrow="Lifecycle"
-                  title="Messaging view"
-                  caption="All your lifecycle automations in one place."
-                  nodes={lifecycleNodes}
-                  isTouchDevice={isTouch}
-                />
-                <BranchBlock
-                  eyebrow="Timeline"
-                  title="Unified view"
-                  caption="All customer events, messages, and health in one place."
-                  nodes={timelineNodes}
-                  variant="timeline"
-                  isTouchDevice={isTouch}
-                />
-              </div>
+              <p className="text-xs text-[#9da8ba] mt-3">
+                Prefer to talk infra? Email <a className="accent" href="mailto:hello@getfluxly.com">hello@getfluxly.com</a>
+              </p>
             </div>
           </div>
         </div>
-      </article>
-
-      <section className="mt-20 max-w-xl mx-auto text-center">
-        <h3 className="text-3xl font-bold mb-4 bg-gradient-to-r from-[#FCA311] via-[#ffd166] to-white text-transparent bg-clip-text drop-shadow-[0_10px_30px_rgba(252,163,17,0.3)]">
-          Interested? Join the List
-        </h3>
-        <p className="text-gray-300 mb-6">
-          Be the first to get updates, private beta access, and early founder
-          perks.
-        </p>
-
-        <form
-          onSubmit={(e) =>
-            submitWaitlist(e, ctaEmail, setCtaEmail, setCtaSubmitted)
-          }
-          className="flex flex-col sm:flex-row gap-3 justify-center"
-        >
-          <input
-            type="email"
-            placeholder="Enter your email"
-            value={ctaEmail}
-            onChange={(e) => setCtaEmail(e.target.value)}
-            className="px-4 py-3 rounded-xl bg-[#0d1324] border border-white/10 text-white placeholder-gray-500 focus:outline-none w-full sm:w-72 shadow-inner shadow-black/30"
-            required
-          />
-          <button
-            type="submit"
-            className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#FCA311] to-[#ffbe45] font-semibold shadow-lg hover:opacity-90 transition w-full sm:w-auto text-black magnetic-btn"
-          >
-            Join Waitlist
-          </button>
-        </form>
-        {ctaSubmitted && (
-          <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-[#FCA311] to-[#ffbe45] text-black font-semibold animate-successPulse animate-greenGlow shadow-lg">
-            <svg
-              viewBox="0 0 24 24"
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            Thank you for joining us!
-          </div>
-        )}
       </section>
 
-      <footer className="mt-24 border-t border-white/10 pt-8 text-center text-sm text-gray-400 flex flex-col items-center gap-4">
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-          <a
-            href="mailto:hello@getfluxly.com"
-            className="flex items-center gap-2 hover:text-[#FCA311] transition"
-          >
-            <svg
-              viewBox="0 0 24 24"
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path d="M4 4h16v16H4z" />
-              <path d="M4 7l8 6 8-6" />
-            </svg>
-            hello@getfluxly.com
-          </a>
-          <a
-            href="https://twitter.com/madeByMD2"
-            target="_blank"
-            rel="noreferrer"
-            className="flex items-center gap-2 hover:text-[#FCA311] transition"
-          >
-            <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor">
-              <path d="M13.47 10.58 19.94 3h-1.53l-5.64 6.63L8.3 3H3.07l6.78 9.86L3.07 21h1.53l6-7.05L15.7 21h5.23l-7.47-10.42Zm-2.12 2.5-.7-.99L5.7 4.3h2.43l4.49 6.3.7.99 5.35 7.51h-2.43l-4.89-6.02Z" />
-            </svg>
+      <footer className="section-narrow">
+        <div className="max-width flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-[#9da8ba]">
+          <div className="flex items-center gap-2">
+            <span className="pill-dot" />
+            Built for teams who own their stack.
+          </div>
+          <div className="flex items-center gap-4">
+            <a href="mailto:hello@getfluxly.com" className="hover:text-white">hello@getfluxly.com</a>
+            <a href="https://twitter.com/madeByMD2" target="_blank" rel="noreferrer" className="hover:text-white">
             @madeByMD2
           </a>
+            <span>© {new Date().getFullYear()} GetFluxly</span>
+          </div>
         </div>
-        <p>© {new Date().getFullYear()} GetFluxly. All rights reserved.</p>
       </footer>
     </main>
   );

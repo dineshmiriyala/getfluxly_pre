@@ -16,28 +16,58 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "GetFluxly - Customer Lifecycle Platform for Modern SaaS",
+  metadataBase: new URL("https://getfluxly.com"),
+  title: "GetFluxly - Product Analytics + Lifecycle Email on Your Own SMTP",
   description:
-    "Dev-friendly, all-in-one customer lifecycle platform: track user behaviour, build segments, send automated messages, and monitor deliverability without vendor lock.",
+    "Paste a few lines of code to capture product analytics, event tracking, and unified customer profiles, then send lifecycle email through SES, Mailgun, SMTP2GO, or your own SMTP — no vendor lock.",
   keywords: [
-    "customer lifecycle platform",
+    "analytics",
     "product analytics",
-    "user behavior tracking",
-    "segmentation",
-    "lifecycle messaging",
-    "deliverability monitoring",
-    "dev friendly",
+    "web analytics",
+    "event tracking",
+    "JS SDK",
+    "HTTP API",
+    "customer profiles",
+    "customer data platform",
+    "CDP",
+    "lifecycle email",
+    "email automation",
+    "email deliverability",
+    "transactional email",
+    "SMTP",
+    "SES",
+    "Mailgun",
+    "SMTP2GO",
+    "developer friendly",
     "SaaS growth",
+    "customer lifecycle",
+    "behavioral segmentation",
+    "server-side tracking",
     "automation",
     "email infrastructure",
   ],
+  alternates: {
+    canonical: "/",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
   openGraph: {
-    title: "GetFluxly — Customer Lifecycle Platform",
+    title: "GetFluxly — Product Analytics + Lifecycle Email",
     description:
-      "Analytics, segmentation, messaging, and deliverability in one unified, dev-friendly platform for modern SaaS teams.",
+      "JS SDK + HTTP event tracking, unified customer profiles, and lifecycle email that runs on SES, Mailgun, SMTP2GO, or any SMTP you already use.",
     url: "https://getfluxly.com",
     siteName: "GetFluxly",
-    type: "article",
+    type: "website",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "GetFluxly — Product Analytics + Lifecycle Email",
+    description:
+      "JS SDK + HTTP event tracking, unified customer profiles, and lifecycle email that runs on your own SMTP provider.",
+    images: ["/opengraph-image"],
   },
 };
 
