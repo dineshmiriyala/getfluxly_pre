@@ -38,7 +38,7 @@ body {
   --fluxly-muted: #0b101c;
   --fluxly-border: rgba(255, 255, 255, 0.08);
   --fluxly-text: #e8ecf2;
-  --fluxly-subtle: #9da8ba;
+  --fluxly-subtle: #b1bdcf;
   --fluxly-card-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
   --code-text: #e6edf7;
   --code-comment: #6c7a90;
@@ -168,6 +168,26 @@ body {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 
+.code-block--labeled {
+  position: relative;
+  padding-top: 24px;
+  padding-right: 60px;
+}
+
+.code-block--labeled::after {
+  content: attr(data-lang);
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  color: var(--fluxly-subtle);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.85;
+  pointer-events: none;
+}
+
 .code-block code {
   display: block;
 }
@@ -239,15 +259,16 @@ body {
 }
 
 .code-tab {
-  border: 1px solid var(--fluxly-border);
+  border: 1px solid rgba(252, 163, 17, 0.35);
   background: rgba(255, 255, 255, 0.04);
-  color: var(--fluxly-subtle);
+  color: rgba(252, 163, 17, 0.82);
   padding: 8px 14px;
   border-radius: 999px;
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.04em;
   transition: all 0.2s ease;
+  box-shadow: 0 10px 22px rgba(252, 163, 17, 0.1);
 }
 
 .code-tab.is-active {
@@ -258,7 +279,8 @@ body {
 }
 
 .code-tab:hover {
-  color: var(--fluxly-text);
+  color: rgba(252, 163, 17, 0.92);
+  border-color: rgba(252, 163, 17, 0.55);
 }
 
 .code-tab.is-active:hover {

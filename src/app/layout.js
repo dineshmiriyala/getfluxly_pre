@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  metadataBase: new URL("https://getfluxly.com"),
+  metadataBase: new URL("https://www.getfluxly.com"),
   title: "GetFluxly - Product Analytics + Lifecycle Email on Your Own SMTP",
   description:
     "Paste a few lines of code to capture product analytics, event tracking, and unified customer profiles, then send lifecycle email through SES, Mailgun, SMTP2GO, or your own SMTP — no vendor lock.",
@@ -57,7 +57,7 @@ export const metadata = {
     title: "GetFluxly — Product Analytics + Lifecycle Email",
     description:
       "JS SDK + HTTP event tracking, unified customer profiles, and lifecycle email that runs on SES, Mailgun, SMTP2GO, or any SMTP you already use.",
-    url: "https://getfluxly.com",
+    url: "https://www.getfluxly.com",
     siteName: "GetFluxly",
     type: "website",
     locale: "en_US",
@@ -80,9 +80,9 @@ export default function RootLayout({ children }) {
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-ZH198LDZGQ"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         />
-        <Script id="ga4-gtag" strategy="afterInteractive">
+        <Script id="ga4-gtag" strategy="lazyOnload">
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}

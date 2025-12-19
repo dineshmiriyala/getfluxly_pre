@@ -3,8 +3,8 @@ export default function SeoSchema() {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     "name": "GetFluxly",
-    "url": "https://getfluxly.com",
-    "image": "https://getfluxly.com/opengraph-image",
+    "url": "https://www.getfluxly.com",
+    "image": "https://www.getfluxly.com/opengraph-image",
     "description": "Dev-friendly product analytics, event tracking, and lifecycle email that runs on your own SMTP providers (SES, Mailgun, SMTP2GO, any SMTP) with JS SDK + HTTP ingest and unified customer profiles.",
     "applicationCategory": "BusinessApplication",
     "applicationSubCategory": "Product analytics and lifecycle email",
@@ -13,7 +13,7 @@ export default function SeoSchema() {
     "provider": {
       "@type": "Organization",
       "name": "GetFluxly",
-      "url": "https://getfluxly.com",
+      "url": "https://www.getfluxly.com",
       "sameAs": [
         "https://twitter.com/madeByMD2"
       ]
