@@ -3,6 +3,16 @@ import { NextResponse } from "next/server";
 export async function POST(req) {
   try {
     const body = await req.json();
+    const countryHeader = req.headers.get("x-vercel-ip-country");
+    const regionHeader = req.headers.get("x-vercel-ip-country-region");
+    const cityHeader = req.headers.get("x-vercel-ip-city");
+
+    const enrichedBody = {
+      ...body,
+      country: body.country ?? countryHeader ?? null,
+      region: body.region ?? regionHeader ?? null,
+      city: body.city ?? cityHeader ?? null,
+    };
 
     const res = await fetch(
       `${process.env.SUPABASE_URL}/rest/v1/analytics`,
@@ -14,7 +24,7 @@ export async function POST(req) {
           "Content-Type": "application/json",
           Prefer: "return=minimal"
         },
-        body: JSON.stringify(body),
+        body: JSON.stringify(enrichedBody),
       }
     );
 
