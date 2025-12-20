@@ -6,12 +6,24 @@ export async function POST(req) {
     const countryHeader = req.headers.get("x-vercel-ip-country");
     const regionHeader = req.headers.get("x-vercel-ip-country-region");
     const cityHeader = req.headers.get("x-vercel-ip-city");
+    const forwardedFor = req.headers.get("x-forwarded-for");
+    const vercelForwardedFor = req.headers.get("x-vercel-forwarded-for");
+    const realIp = req.headers.get("x-real-ip");
+    const rawIp =
+      forwardedFor ||
+      vercelForwardedFor ||
+      realIp ||
+      "";
+    const clientIp = rawIp
+      .split(",")[0]
+      .trim() || null;
 
     const enrichedBody = {
       ...body,
       country: body.country ?? countryHeader ?? null,
       region: body.region ?? regionHeader ?? null,
       city: body.city ?? cityHeader ?? null,
+      ip_address: body.ip_address ?? clientIp,
     };
 
     const res = await fetch(
