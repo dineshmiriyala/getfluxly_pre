@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { getStoredUtmParams, persistUtmParams } from "@/app/lib/utm.js";
 
 const createSessionId = () => {
   if (typeof crypto !== "undefined" && crypto.randomUUID) {
@@ -19,7 +20,10 @@ export default function Tracker() {
       localStorage.setItem("fluxly_session", session_id);
     }
 
+    persistUtmParams(window.location.search);
+
     const track = async () => {
+      const utmParams = getStoredUtmParams();
       const data = {
         user_agent: navigator.userAgent,
         pathname: window.location.pathname,
@@ -32,6 +36,7 @@ export default function Tracker() {
           /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
             ? "mobile"
             : "desktop",
+        ...utmParams,
       };
 
       await fetch("/api/track", {

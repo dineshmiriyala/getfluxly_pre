@@ -2,7 +2,12 @@ import { NextResponse } from "next/server";
 
 export async function POST(req) {
   try {
-    const { email } = await req.json();
+    const {
+      email,
+      utm_source = null,
+      utm_medium = null,
+      utm_campaign = null,
+    } = await req.json();
 
     if (!email) {
       return NextResponse.json({ error: "Email required" }, { status: 400 });
@@ -20,6 +25,9 @@ export async function POST(req) {
         },
         body: JSON.stringify({
           email,
+          utm_source,
+          utm_medium,
+          utm_campaign,
           created_at: new Date().toISOString(),
         }),
       }
