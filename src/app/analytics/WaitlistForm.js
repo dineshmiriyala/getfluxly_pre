@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { getStoredUtmParams } from "@/app/lib/utm.js";
 
 export default function AnalyticsWaitlistForm() {
   const [email, setEmail] = useState("");
@@ -12,12 +13,13 @@ export default function AnalyticsWaitlistForm() {
     setStatus("submitting");
 
     try {
+      const utmParams = getStoredUtmParams();
       const res = await fetch("/api/waitlist", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, ...utmParams }),
       });
 
       if (res.ok) {
@@ -60,4 +62,3 @@ export default function AnalyticsWaitlistForm() {
     </form>
   );
 }
-
